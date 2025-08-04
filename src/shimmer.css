@@ -1,0 +1,23 @@
+/* shimmer.css */
+.shimmer-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  transform: skewX(-20deg);
+  transition: all 0.5s ease-in-out;
+  z-index: 1;
+}
+
+.shimmer-card:hover::before {
+  left: 125%;
+  transition: left 0.8s ease-in-out;
+}
