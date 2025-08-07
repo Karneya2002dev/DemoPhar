@@ -33,7 +33,12 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="fixed top-0 left-0 right-0 z-50 flex justify-center">
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="fixed top-0 left-0 right-0 z-50 flex justify-center"
+      >
         {/* Scroll Progress Bar */}
         <div className="h-1 bg-blue-400 fixed top-0 left-0 w-full z-50">
           <div
@@ -49,45 +54,72 @@ const Navbar = () => {
           }`}
         >
           <div className="flex items-center justify-between gap-x-6">
-            {/* Logo + Name */}
-            <div className="flex items-center space-x-3">
-              <img src={logo} alt="Logo" className="h-12 w-12 object-contain" />
-              <img src={name} alt="FourmaX Pharma" className="h-10 md:h-12 object-contain" />
-            </div>
+            {/* Logo + Name with zoom animation */}
+            <motion.div
+              className="flex items-center space-x-3"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
+              <motion.img
+                src={logo}
+                alt="Logo"
+                className="h-12 w-12 object-contain"
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 2, repeat: Infinity, repeatType: 'mirror' }}
+              />
+              <motion.img
+                src={name}
+                alt="FourmaX Pharma"
+                className="h-10 md:h-12 object-contain"
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 2, repeat: Infinity, repeatType: 'mirror', delay: 0.5 }}
+              />
+            </motion.div>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-5">
+            <div className="hidden md:flex items-center space-x-6">
               {links.map(link => {
-                const isHomeGroupActive =
-                  link.name === 'HOME' &&
-                  (location.pathname === '/' || location.pathname === '/about');
-
+                const isActive = location.pathname === link.path;
                 return (
-                  <NavLink
+                  <motion.div
                     key={link.name}
-                    to={link.path}
-                    end={link.path === '/'}
-                    className={({ isActive }) => {
-                      const active = isActive || isHomeGroupActive;
-                      return `group relative transition-all text-sm font-medium ${
-                        active
-                          ? 'text-sky-500 font-bold'
-                          : 'text-sky-500'
-                      } hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#FF0066] hover:to-[#9900FF]`;
-                    }}
+                    whileHover={{ scale: 1.08 }}
+                    transition={{ type: 'spring', stiffness: 400 }}
+                    className="group relative text-sm font-medium"
                   >
-                    {link.name}
-                    <span className="block h-0.5 bg-gradient-to-r from-[#FF0066] to-[#9900FF] scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 mt-1" />
-                  </NavLink>
+                    <NavLink to={link.path} end={link.path === '/'}>
+                      {isActive ? (
+                        <span>
+                          <span className="text-[#FF0066] font-bold">{link.name.charAt(0)}</span>
+                          <span className="text-sky-500 font-bold">{link.name.slice(1)}</span>
+                        </span>
+                      ) : (
+                        <span className="text-sky-500 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:to-purple-500 transition-all duration-300">
+                          {link.name}
+                        </span>
+                      )}
+                    </NavLink>
+                    {/* Underline animation */}
+                    <motion.div
+                      className="h-[2px] bg-pink-500 absolute bottom-[-4px] left-0"
+                      initial={{ width: 0 }}
+                      animate={{ width: isActive ? '100%' : 0 }}
+                      transition={{ duration: 0.4 }}
+                    />
+                  </motion.div>
                 );
               })}
             </div>
 
             {/* Hamburger Menu */}
             <div className="md:hidden">
-              <button onClick={() => setMenuOpen(!menuOpen)} className="text-black text-2xl">
+              <motion.button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="text-black text-2xl"
+                whileTap={{ scale: 0.8 }}
+              >
                 {menuOpen ? <HiX /> : <HiMenuAlt3 />}
-              </button>
+              </motion.button>
             </div>
           </div>
 
@@ -95,34 +127,38 @@ const Navbar = () => {
           <AnimatePresence>
             {menuOpen && (
               <motion.div
-                initial={{ height: 0 }}
-                animate={{ height: 'auto' }}
-                exit={{ height: 0 }}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3 }}
                 className="md:hidden overflow-hidden mt-2"
               >
                 <div className="flex flex-col px-4 py-3 space-y-3 bg-transparent">
-                  {links.map(link => {
-                    const isHomeGroupActive =
-                      link.name === 'HOME' &&
-                      (location.pathname === '/' || location.pathname === '/about');
-
+                  {links.map((link, index) => {
+                    const isActive = location.pathname === link.path;
                     return (
-                      <NavLink
+                      <motion.div
                         key={link.name}
-                        to={link.path}
-                        end={link.path === '/'}
-                        onClick={() => setMenuOpen(false)}
-                        className={({ isActive }) => {
-                          const active = isActive || isHomeGroupActive;
-                          return `group relative transition-all text-sm font-medium bg-gradient-to-r from-[#FF0066] to-[#9900FF] bg-clip-text text-transparent ${
-                            active ? 'font-bold' : ''
-                          }`;
-                        }}
+                        initial={{ x: -30, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: index * 0.05 }}
                       >
-                        {link.name}
-                        <span className="block h-0.5 bg-gradient-to-r from-[#FF0066] to-[#9900FF] scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 mt-1" />
-                      </NavLink>
+                        <NavLink
+                          to={link.path}
+                          end={link.path === '/'}
+                          onClick={() => setMenuOpen(false)}
+                          className="group text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#FF0066] to-[#9900FF]"
+                        >
+                          {isActive ? (
+                            <span>
+                              <span className="text-[#FF0066] font-bold">{link.name.charAt(0)}</span>
+                              <span className="text-white font-bold">{link.name.slice(1)}</span>
+                            </span>
+                          ) : (
+                            <span>{link.name}</span>
+                          )}
+                        </NavLink>
+                      </motion.div>
                     );
                   })}
                 </div>
@@ -130,7 +166,7 @@ const Navbar = () => {
             )}
           </AnimatePresence>
         </nav>
-      </div>
+      </motion.div>
 
       {/* Spacer */}
       <div className="h-[100px]" />

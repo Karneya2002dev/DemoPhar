@@ -9,6 +9,7 @@ import Product from './Component/Pages/Product';
 import AboutUs from './Component/Pages/AboutUs';
 import Carrers from './Component/Pages/Carrers';
 import Contact from './Component/Pages/Contact';
+import FloatingPhone from './Component/FloatingPhone';
 const App = () => {
   return (
   <>
@@ -25,9 +26,10 @@ const App = () => {
       <Route path='/carrers' element={<Carrers />} />
       <Route path='/contact' element={<Contact />} />
 
+
     </Routes>
 </Layout>
-
+ {location.pathname === '/contact' && <FloatingPhone />}
 
 
 

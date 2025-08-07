@@ -9,37 +9,62 @@ const products = [
     category: 'Cardiovascular',
     title: 'Cardiovascular Care',
     description: 'Advanced medications for heart health and blood pressure management.',
-    image: 'https://cpea.neocities.org/FOURMAX/images/Product.jpg',
+    image: 'https://t3.ftcdn.net/jpg/08/85/78/36/360_F_885783672_vvLOoaSazODo7JLje6A9UXpMXXv5cgJu.jpg',
   },
   {
     id: 2,
     category: 'Respiratory',
     title: 'Respiratory Solutions',
     description: 'Treatments for asthma, COPD, and other respiratory conditions.',
-    image: "https://cpea.neocities.org/FOURMAX/images/Product.jpg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBfLDVDnysmI_yrvwUwJrpLl0ua5W7G5VRtw&s",
   },
   {
     id: 3,
     category: 'Infectious Disease',
     title: 'Antibiotics',
     description: 'Broad-spectrum and targeted antibiotics for various infections.',
-    image: "https://cpea.neocities.org/FOURMAX/images/Product.jpg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLHAS1LriHiKou-yvxPeZa717EbtWet6e6hA&s",
   },
   {
     id: 4,
     category: 'Diabetics',
     title: 'Diabetes Management',
     description: 'Comprehensive solutions for effective blood sugar control and diabetic care.',
-    image: "https://cpea.neocities.org/FOURMAX/images/Product.jpg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQOtAAA_pbZyXov4OCCjLrKpC0lzvQaMpZ5g&s",
   },
 ];
+
+const categoryBackgrounds = {
+  'All Products': 'https://img.pikbest.com/wp/202347/capsule-pill-pharmacy-and-healthcare-concept-blue-background-with-pills-in-panoramic-layout-3d-render_9763081.jpg!sw800',
+  'Cardiovascular': 'https://media.istockphoto.com/id/454238423/photo/stethoscope-heart-shape.jpg?s=612x612&w=0&k=20&c=1jtvb5aCwdR7nY1prW11mNwW0Wla3bUSkc17_C6YfK8=',
+  'Respiratory': 'https://media.istockphoto.com/id/816819352/photo/the-inhaler-and-mask-pairs-antiallergic-drugs-isolated-on-black-background.jpg?s=612x612&w=0&k=20&c=fbu9ol4ibS_0sV5S83WL4DsI2FYVdzwdse_hz2H8yJ4=',
+  'Infectious Disease': 'https://png.pngtree.com/background/20250212/original/pngtree-texture-of-geometry-and-microbiology-in-medical-particle-elements-picture-image_13456132.jpg',
+  'Diabetics': 'https://www.slideegg.com/image/multi-slide/47857/82163-diabetes-powerpoint-background-01.png',
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i = 1) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.15,
+      duration: 0.6,
+      ease: 'easeOut',
+    },
+  }),
+};
 
 const ProductCard = ({ product, isFlipped, onClick, delay = 0 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay }}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={fadeInUp}
+      custom={delay + 1}
+      whileHover={{ scale: 1.05 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       className="group [perspective:1000px] w-full h-64 sm:h-72 md:h-80 cursor-pointer"
       onClick={onClick}
     >
@@ -50,7 +75,7 @@ const ProductCard = ({ product, isFlipped, onClick, delay = 0 }) => {
       >
         {/* Front */}
         <div className="absolute inset-0 bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-lg flex flex-col items-center justify-center text-center [backface-visibility:hidden]">
-          <h4 className="text-2xl font-bold text-sky-500">{product.category}</h4>
+          <h4 className="text-2xl font-bold text-gray-900">{product.category}</h4>
         </div>
 
         {/* Back */}
@@ -94,9 +119,9 @@ const Product = () => {
     <section className="relative text-white py-16 px-4 sm:px-12 overflow-hidden">
       {/* Background */}
       <div
-        className="absolute inset-0 bg-cover bg-center z-0"
+        className="absolute inset-0 bg-cover bg-center z-0 transition-all duration-700"
         style={{
-          backgroundImage: `url('https://img.pikbest.com/wp/202347/capsule-pill-pharmacy-and-healthcare-concept-blue-background-with-pills-in-panoramic-layout-3d-render_9763081.jpg!sw800')`,
+          backgroundImage: `url('${categoryBackgrounds[selectedCategory]}')`,
         }}
       >
         <div className="absolute inset-0 bg-black opacity-60"></div>
@@ -105,10 +130,11 @@ const Product = () => {
       {/* Content */}
       <div className="relative z-10">
         <motion.h2
-          initial={{ opacity: 0, y: -30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true }}
+          variants={fadeInUp}
+          custom={0}
           className="text-4xl font-bold text-center mb-10"
         >
           Our Products
@@ -116,26 +142,32 @@ const Product = () => {
 
         {/* Category Buttons */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1 }}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true }}
+          variants={{
+            visible: {
+              transition: { staggerChildren: 0.1 },
+            },
+          }}
           className="flex flex-wrap justify-center gap-4 mb-12"
         >
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <motion.button
               key={category}
+              variants={fadeInUp}
+              custom={index}
               onClick={() => {
                 setSelectedCategory(category);
                 setFlippedCardId(null);
               }}
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.05 }}
-              className={`px-5 py-2 rounded-full font-medium transition shadow-md ${
-                selectedCategory === category
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
-                  : 'bg-white text-gray-800 hover:bg-blue-100'
-              }`}
+              className={`px-5 py-2 rounded-full font-medium transition shadow-md
+                ${selectedCategory === category
+                  ? 'bg-gradient-to-r from-gray-800 to-black text-white'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                }`}
             >
               {category}
             </motion.button>
@@ -150,7 +182,7 @@ const Product = () => {
               product={product}
               isFlipped={flippedCardId === product.id}
               onClick={() => handleCardClick(product.id)}
-              delay={index * 0.2}
+              delay={index}
             />
           ))}
         </div>

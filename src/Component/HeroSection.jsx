@@ -5,17 +5,17 @@ import { FaFlask, FaIndustry, FaCheckCircle, FaTruckMoving } from 'react-icons/f
 import doctorImg from '../assets/Doctor.png';
 import bgVideo from '../assets/dna.mp4';
 
-const textVariant = {
+const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
-  visible: (i = 1) => ({
-    opacity: 1,
-    y: 0,
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+};
+
+const containerStagger = {
+  visible: {
     transition: {
-      delay: i * 0.2,
-      duration: 0.6,
-      ease: 'easeOut',
+      staggerChildren: 0.25,
     },
-  }),
+  },
 };
 
 const cardVariants = {
@@ -61,7 +61,6 @@ const services = [
 const CombinedSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
-
   const navigate = useNavigate();
 
   return (
@@ -75,7 +74,6 @@ const CombinedSection = () => {
         playsInline
       >
         <source src={bgVideo} type="video/mp4" />
-        Your browser does not support the video tag.
       </video>
 
       {/* Overlay Content */}
@@ -84,24 +82,25 @@ const CombinedSection = () => {
         className="relative z-10 px-4 py-16 space-y-32 bg-gradient-to-b from-[#0e1235]/90 to-[#0b0f28]/95"
       >
         {/* Hero Section */}
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
+        <motion.div
+          variants={containerStagger}
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+          className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10"
+        >
           {/* Left Text Block */}
-          <motion.div
-            initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
-            className="w-full md:w-1/2 space-y-6"
-          >
+          <div className="w-full md:w-1/2 space-y-6">
             <motion.h1
-              variants={textVariant}
-              custom={1}
+              variants={fadeInUp}
+              whileHover={{ scale: 1.02 }}
               className="text-4xl md:text-5xl font-extrabold leading-snug text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-300"
             >
-              Beyond Boundaries, Ahead <span className="text-blue-400">in Healthcare</span>
+              Beyond Boundaries, Ahead{' '}
+              <span className="text-blue-400">in Healthcare</span>
             </motion.h1>
 
             <motion.p
-              variants={textVariant}
-              custom={2}
+              variants={fadeInUp}
               className="text-sm sm:text-base text-gray-200 leading-relaxed"
             >
               <strong>We treat</strong> not only symptoms — we care about each person. <br />
@@ -111,9 +110,8 @@ const CombinedSection = () => {
             </motion.p>
 
             <motion.button
-              variants={textVariant}
-              custom={3}
-              whileHover={{ scale: 1.05 }}
+              variants={fadeInUp}
+              whileHover={{ scale: 1.08, backgroundColor: '#2563eb' }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/products')}
               className="bg-blue-600 hover:bg-blue-700 transition px-6 py-3 rounded-full text-white font-semibold shadow-md w-fit"
@@ -121,10 +119,8 @@ const CombinedSection = () => {
               Explore Our Products
             </motion.button>
 
-            {/* Stats */}
             <motion.div
-              variants={textVariant}
-              custom={4}
+              variants={fadeInUp}
               className="grid grid-cols-3 gap-4 mt-6 text-center text-sm text-gray-200"
             >
               <div>
@@ -140,35 +136,41 @@ const CombinedSection = () => {
                 <p>Digital Diagnostics</p>
               </div>
             </motion.div>
-          </motion.div>
+          </div>
 
           {/* Right Image */}
           <motion.div
-            initial={{ opacity: 0, y: 80 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.4, ease: 'easeOut' }}
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={isInView ? { scale: 1, opacity: 1 } : {}}
+            transition={{ delay: 0.5, duration: 1 }}
             className="w-full md:w-1/2 relative flex justify-center items-center z-20"
           >
-            <img
-              src={doctorImg}
-              alt="Doctor"
-              className="w-[280px] md:w-[400px] object-contain z-20"
-            />
+            <motion.div
+              animate={{ y: [0, -15, 0] }}
+              transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+              className="relative p-4 rounded-3xl bg-gradient-to-br from-blue-500/30 to-purple-500/30 border border-blue-300 shadow-xl"
+            >
+              <motion.img
+                src={doctorImg}
+                alt="Doctor"
+                className="w-[280px] md:w-[400px] object-contain z-20"
+                whileHover={{ scale: 1.03 }}
+                transition={{ type: 'spring', stiffness: 200 }}
+              />
+            </motion.div>
 
             {/* Floating Labels */}
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={isInView ? { opacity: 1, y: [0, -10, 0] } : {}}
-              transition={{ delay: 0.6, duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              animate={{ y: [0, -10, 0], opacity: 1 }}
+              transition={{ duration: 2, repeat: Infinity }}
               className="absolute top-[10%] left-[15%] bg-white text-gray-800 shadow-md px-4 py-1 rounded-full text-sm font-medium z-30"
             >
               Reliability
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={isInView ? { opacity: 1, y: [0, 10, 0] } : {}}
-              transition={{ delay: 0.7, duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+              animate={{ y: [0, 10, 0], opacity: 1 }}
+              transition={{ duration: 2.5, repeat: Infinity }}
               className="absolute top-[38%] right-[10%] bg-white text-gray-800 shadow-md px-4 py-1 rounded-full text-sm font-medium z-30"
             >
               Experience
@@ -176,7 +178,7 @@ const CombinedSection = () => {
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
               className="absolute bottom-[2%] md:bottom-[-10px] bg-blue-600 text-white text-xs p-4 w-64 rounded-xl shadow-lg leading-tight z-30"
             >
@@ -184,18 +186,24 @@ const CombinedSection = () => {
               The latest generation equipment, digital diagnostics, advanced techniques – all of this works for your health.
             </motion.div>
           </motion.div>
-        </div>
+        </motion.div>
 
         {/* What We Do Section */}
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 relative inline-block">
+          <motion.h2
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-bold text-white mb-12 relative inline-block"
+          >
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-300">
               What We Do
             </span>
             <div className="w-16 h-1 bg-gradient-to-r from-purple-400 to-blue-300 mt-2 mx-auto rounded-full" />
-          </h2>
+          </motion.h2>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 md:grid-cols=2 lg:grid-cols-4">
             {services.map((service, index) => (
               <motion.div
                 key={index}
@@ -204,6 +212,11 @@ const CombinedSection = () => {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.3 }}
                 variants={cardVariants}
+                whileHover={{
+                  y: -10,
+                  scale: 1.03,
+                  boxShadow: '0 12px 30px rgba(0, 0, 0, 0.2)',
+                }}
                 className="relative group rounded-2xl transition-all duration-500"
               >
                 <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-100 blur-sm transition duration-500" />
