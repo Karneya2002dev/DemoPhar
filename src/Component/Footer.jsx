@@ -9,7 +9,7 @@ import {
 } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import logo from '../assets/logoo.png';
-import marqwonLogo from '../assets/marqwon.png';
+import marqwonLogo from '../assets/blacklogo.jpg';
 
 const socialIcons = [
   {
@@ -106,7 +106,7 @@ const Footer = () => {
     className="inline-flex items-center justify-center space-x-2 text-sm sm:text-base font-medium text-black animate-pulse hover:text-blue-400 transition duration-300"
   >
     <span>Developed by</span>
-    <img src={marqwonLogo} alt="Marqwon" className="h-4 w-auto" />
+    <img src={marqwonLogo} alt="Marqwon" className="h-7 w-auto" />
     <span className="text-gradient bg-gradient-to-r from-[#00c6ff] to-[#0072ff] bg-clip-text text-transparent">
       MarqWon
     </span>

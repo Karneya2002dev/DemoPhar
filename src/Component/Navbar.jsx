@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { HiMenuAlt3, HiX } from 'react-icons/hi';
 import logo from '../assets/logoo.png';
 import name from '../assets/name.png';
 
-const links = [
+const shootingOrder = [
   { name: 'HOME', path: '/' },
   { name: 'PRODUCTS', path: '/products' },
   { name: 'ABOUT US', path: '/about' },
@@ -17,12 +17,18 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
+  const [shotLinks, setShotLinks] = useState([]);
+  const [showName, setShowName] = useState(false);
 
+  const location = useLocation();
+  const logoControls = useAnimation();
+
+  // Scroll progress effect
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       const progress = (scrollTop / scrollHeight) * 100;
       setScrollProgress(progress);
       setScrolled(scrollTop > 50);
@@ -30,6 +36,36 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Animation sequence
+  useEffect(() => {
+    const sequence = async () => {
+      // Step 1: Move logo to center with slow coin rotation (Y-axis) + zoom in
+      await logoControls.start({
+        x: window.innerWidth / 2 - 60,
+        scale: 1.5,
+        rotateY: 360,
+        transition: { duration: 2, ease: 'easeInOut' }, // slower
+      });
+
+      // Step 2: Move back to left with slow coin rotation + zoom out
+      await logoControls.start({
+        x: 0,
+        scale: 1,
+        rotateY: 720, // continues rotation
+        transition: { duration: 2, ease: 'easeInOut' }, // slower
+      });
+
+      // Step 3: Show all links together
+      setShotLinks(shootingOrder);
+
+      // Step 4: Show name after delay
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setShowName(true);
+    };
+
+    sequence();
+  }, [logoControls]);
 
   return (
     <>
@@ -50,48 +86,56 @@ const Navbar = () => {
         {/* Navbar */}
         <nav
           className={`transition-all duration-300 mt-4 w-full max-w-[95%] rounded-xl px-4 ${
-            scrolled ? 'backdrop-blur-md shadow-lg py-2 bg-transparent' : 'bg-transparent py-3'
+            scrolled
+              ? 'backdrop-blur-md shadow-lg py-2 bg-transparent'
+              : 'bg-transparent py-3'
           }`}
         >
           <div className="flex items-center justify-between gap-x-6">
-            {/* Logo + Name with zoom animation */}
-            <motion.div
-              className="flex items-center space-x-3"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-            >
+            {/* Logo + Name */}
+            <div className="flex items-center space-x-3 relative overflow-visible">
               <motion.img
                 src={logo}
                 alt="Logo"
                 className="h-12 w-12 object-contain"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity, repeatType: 'mirror' }}
+                style={{ transformStyle: 'preserve-3d' }}
+                initial={{ x: 0, scale: 1, rotateY: 0 }}
+                animate={logoControls}
               />
-              <motion.img
-                src={name}
-                alt="FourmaX Pharma"
-                className="h-10 md:h-12 object-contain"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity, repeatType: 'mirror', delay: 0.5 }}
-              />
-            </motion.div>
+
+              {showName && (
+                <motion.img
+                  src={name}
+                  alt="FourmaX Pharma"
+                  className="h-10 md:h-12 object-contain"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 1, ease: 'easeOut' }}
+                />
+              )}
+            </div>
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-6">
-              {links.map(link => {
+              {shotLinks.map((link) => {
                 const isActive = location.pathname === link.path;
                 return (
                   <motion.div
                     key={link.name}
-                    whileHover={{ scale: 1.08 }}
-                    transition={{ type: 'spring', stiffness: 400 }}
+                    initial={{ x: -100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.4 }}
                     className="group relative text-sm font-medium"
                   >
                     <NavLink to={link.path} end={link.path === '/'}>
                       {isActive ? (
                         <span>
-                          <span className="text-[#FF0066] font-bold">{link.name.charAt(0)}</span>
-                          <span className="text-sky-500 font-bold">{link.name.slice(1)}</span>
+                          <span className="text-[#FF0066] font-bold">
+                            {link.name.charAt(0)}
+                          </span>
+                          <span className="text-sky-500 font-bold">
+                            {link.name.slice(1)}
+                          </span>
                         </span>
                       ) : (
                         <span className="text-sky-500 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:to-purple-500 transition-all duration-300">
@@ -99,19 +143,12 @@ const Navbar = () => {
                         </span>
                       )}
                     </NavLink>
-                    {/* Underline animation */}
-                    <motion.div
-                      className="h-[2px] bg-pink-500 absolute bottom-[-4px] left-0"
-                      initial={{ width: 0 }}
-                      animate={{ width: isActive ? '100%' : 0 }}
-                      transition={{ duration: 0.4 }}
-                    />
                   </motion.div>
                 );
               })}
             </div>
 
-            {/* Hamburger Menu */}
+            {/* Mobile Menu Button */}
             <div className="md:hidden">
               <motion.button
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -134,7 +171,7 @@ const Navbar = () => {
                 className="md:hidden overflow-hidden mt-2"
               >
                 <div className="flex flex-col px-4 py-3 space-y-3 bg-transparent">
-                  {links.map((link, index) => {
+                  {shootingOrder.map((link, index) => {
                     const isActive = location.pathname === link.path;
                     return (
                       <motion.div
@@ -151,8 +188,12 @@ const Navbar = () => {
                         >
                           {isActive ? (
                             <span>
-                              <span className="text-[#FF0066] font-bold">{link.name.charAt(0)}</span>
-                              <span className="text-white font-bold">{link.name.slice(1)}</span>
+                              <span className="text-[#FF0066] font-bold">
+                                {link.name.charAt(0)}
+                              </span>
+                              <span className="text-white font-bold">
+                                {link.name.slice(1)}
+                              </span>
                             </span>
                           ) : (
                             <span>{link.name}</span>

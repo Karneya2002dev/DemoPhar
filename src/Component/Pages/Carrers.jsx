@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const jobList = [
   {
@@ -64,42 +64,116 @@ const fadeUp = {
   }),
 };
 
+// New modal animation
+const modalVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { type: "spring", stiffness: 120, damping: 15 },
+  },
+  exit: { opacity: 0, scale: 0.8, transition: { duration: 0.2 } },
+};
+
 const Careers = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    coverLetter: "",
+    resume: null,
+  });
+  const [pdfPreview, setPdfPreview] = useState(null);
+
+  const handleApplyClick = (job) => {
+    setSelectedJob(job);
+    setShowForm(true);
+  };
+
+  const handleClose = () => {
+    setShowForm(false);
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      coverLetter: "",
+      resume: null,
+    });
+    setPdfPreview(null);
+  };
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "resume" && files && files[0]) {
+      const file = files[0];
+      setFormData((prev) => ({
+        ...prev,
+        resume: file,
+      }));
+
+      if (file.type === "application/pdf") {
+        const fileURL = URL.createObjectURL(file);
+        setPdfPreview(fileURL);
+      } else {
+        setPdfPreview(null);
+      }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: files ? files[0] : value,
+      }));
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (pdfPreview) {
+        URL.revokeObjectURL(pdfPreview);
+      }
+    };
+  }, [pdfPreview]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form submitted:", { ...formData, job: selectedJob.title });
+    alert("Application submitted successfully!");
+    handleClose();
+  };
+
   return (
     <section className="relative w-full min-h-[100vh] bg-white text-gray-800 overflow-hidden">
+      {/* Intro Section */}
+      <motion.div
+        className="relative z-20 flex flex-col justify-center items-center text-center px-4 py-24 max-w-6xl mx-auto h-[80vh] bg-cover bg-center rounded-xl"
+        style={{
+          backgroundImage: `url('https://c9d6f136.delivery.rocketcdn.me/wp-content/uploads/2020/08/Careers.jpg')`,
+        }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeUp}
+      >
+        <div className="absolute inset-0 bg-black/40 z-0 rounded-xl" />
 
-      {/* Intro Section with BG Image */}
-      {/* Intro Section with BG Image */}
-<motion.div
-  className="relative z-20 flex flex-col justify-center items-center text-center px-4 py-24 max-w-6xl mx-auto h-[80vh] bg-cover bg-center rounded-xl"
-  style={{
-    backgroundImage: `url('https://c9d6f136.delivery.rocketcdn.me/wp-content/uploads/2020/08/Careers.jpg')`,
-  }}
-  initial="hidden"
-  whileInView="visible"
-  viewport={{ once: true }}
-  variants={fadeUp}
->
-  <div className="absolute inset-0 bg-black/40 z-0 rounded-xl" />
+        <motion.div
+          className="relative z-10 bg-blue-100 text-blue-800 text-xl font-bold rounded-lg shadow-md px-6 py-2 mb-6"
+          variants={fadeUp}
+        >
+          Join Our Team
+        </motion.div>
 
-  <motion.div
-    className="relative z-10 bg-blue-100 text-blue-800 text-xl font-bold rounded-lg shadow-md px-6 py-2 mb-6"
-    variants={fadeUp}
-  >
-    Join Our Team
-  </motion.div>
-
-  <motion.p
-    className="relative z-10 text-white text-lg md:text-xl font-medium leading-relaxed"
-    variants={fadeUp}
-    custom={1}
-  >
-    At Fourmax Pharmaceuticals, we're looking for talented individuals
-    who are passionate about making a difference in healthcare. Explore
-    our current opportunities and join our innovative team.
-  </motion.p>
-</motion.div>
-
+        <motion.p
+          className="relative z-10 text-white text-lg md:text-xl font-medium leading-relaxed"
+          variants={fadeUp}
+          custom={1}
+        >
+          At Fourmax Pharmaceuticals, we're looking for talented individuals
+          who are passionate about making a difference in healthcare. Explore
+          our current opportunities and join our innovative team.
+        </motion.p>
+      </motion.div>
 
       {/* Why Join Section */}
       <motion.div
@@ -177,7 +251,10 @@ const Careers = () => {
               <p className="text-sm text-gray-700 mb-6 leading-relaxed">
                 {job.description}
               </p>
-              <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium px-5 py-2 rounded-full text-sm transition-all flex items-center gap-2">
+              <button
+                onClick={() => handleApplyClick(job)}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium px-5 py-2 rounded-full text-sm transition-all flex items-center gap-2"
+              >
                 Apply Now
                 <svg
                   className="w-4 h-4"
@@ -193,6 +270,98 @@ const Careers = () => {
           ))}
         </div>
       </motion.div>
+
+      {/* Apply Now Modal */}
+      <AnimatePresence>
+        {showForm && (
+          <motion.div
+            className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 px-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-2xl shadow-lg p-6 max-w-lg w-full relative overflow-y-auto max-h-[90vh]"
+              variants={modalVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              <button
+                onClick={handleClose}
+                className="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl"
+              >
+                ✕
+              </button>
+              <h3 className="text-2xl font-bold text-purple-700 mb-4">
+                Apply for {selectedJob?.title}
+              </h3>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Full Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="w-full border rounded-lg px-4 py-2"
+                />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full border rounded-lg px-4 py-2"
+                />
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Phone Number"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  className="w-full border rounded-lg px-4 py-2"
+                />
+                <textarea
+                  name="coverLetter"
+                  placeholder="Cover Letter"
+                  value={formData.coverLetter}
+                  onChange={handleChange}
+                  rows="4"
+                  className="w-full border rounded-lg px-4 py-2"
+                />
+                <input
+                  type="file"
+                  name="resume"
+                  accept=".pdf,.doc,.docx"
+                  onChange={handleChange}
+                  required
+                  className="w-full"
+                />
+
+                {pdfPreview && (
+                  <div className="mt-4 border rounded-lg overflow-hidden">
+                    <iframe
+                      src={pdfPreview}
+                      title="Resume Preview"
+                      className="w-full h-64"
+                    />
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all"
+                >
+                  Submit Application
+                </button>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
