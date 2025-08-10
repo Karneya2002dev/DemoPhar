@@ -10,6 +10,7 @@ import AboutUs from './Component/Pages/AboutUs';
 import Carrers from './Component/Pages/Carrers';
 import Contact from './Component/Pages/Contact';
 import FloatingPhone from './Component/FloatingPhone';
+import Events from './Component/Pages/Events';
 const App = () => {
   return (
   <>
@@ -24,6 +25,7 @@ const App = () => {
       <Route path='/products' element={<Product />} />
       <Route path='/about' element={<AboutUs />} />
       <Route path='/carrers' element={<Carrers />} />
+      <Route path='/events' element={<Events/>} />
       <Route path='/contact' element={<Contact />} />
 
 

@@ -10,8 +10,10 @@ const shootingOrder = [
   { name: 'PRODUCTS', path: '/products' },
   { name: 'ABOUT US', path: '/about' },
   { name: 'CAREERS', path: '/carrers' },
+  { name: 'EVENTS', path: '/events' }, // ✅ Added Events link
   { name: 'CONTACT', path: '/contact' },
 ];
+
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);

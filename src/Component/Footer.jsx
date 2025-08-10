@@ -8,7 +8,7 @@ import {
   FaEnvelope,
 } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
-import logo from '../assets/logoo.png';
+import logo from '../assets/logo.png';
 import marqwonLogo from '../assets/blacklogo.jpg';
 
 const socialIcons = [
@@ -45,7 +45,12 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           {/* Logo & Copyright */}
           <div className="flex flex-col items-center md:items-start space-y-4">
-            <img src={logo} alt="Fourmax Logo" className="h-16 w-auto drop-shadow-md" />
+           <img
+  src={logo}
+  alt="Fourmax Logo"
+  className="h-30  w-auto drop-shadow-lg"
+/>
+
             <p className="text-sm text-center md:text-left text-black/80">
               &copy; {new Date().getFullYear()} Fourmax Pharmaceuticals. All rights reserved.
             </p>
