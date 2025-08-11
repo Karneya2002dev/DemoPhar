@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
@@ -7,6 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+// Import images (consider compressing them for better performance)
 import event1 from "../../assets/event1.jpeg";
 import event2 from "../../assets/event2.jpeg";
 import event3 from "../../assets/event3.jpg";
@@ -56,6 +57,14 @@ const Events = () => {
       description: "Global exhibition of pharma innovations and partnerships.",
     },
   ];
+
+  // ✅ Preload all images in background for smoother carousel
+  useEffect(() => {
+    eventData.forEach((ev) => {
+      const img = new Image();
+      img.src = ev.image;
+    });
+  }, []);
 
   return (
     <section className="py-16 bg-gray-50">
@@ -107,12 +116,18 @@ const Events = () => {
                 custom={index}
                 className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition duration-300"
               >
-                <motion.img
-                  src={event.image}
-                  alt={event.caption}
-                  className="w-full h-64 object-cover"
-                  whileHover={{ scale: 1.05 }}
-                />
+                {/* Image with lazy loading + blur placeholder */}
+                <div className="relative w-full h-64 bg-gray-200 animate-pulse">
+                  <motion.img
+                    src={event.image}
+                    alt={event.caption}
+                    loading="lazy"
+                    className="w-full h-64 object-cover absolute inset-0"
+                    whileHover={{ scale: 1.05 }}
+                    onLoad={(e) => e.target.parentElement.classList.remove("animate-pulse", "bg-gray-200")}
+                  />
+                </div>
+
                 <div className="p-4">
                   <p className="text-gray-800 text-center text-base font-semibold">
                     {event.caption}

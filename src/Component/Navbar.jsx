@@ -10,10 +10,9 @@ const shootingOrder = [
   { name: 'PRODUCTS', path: '/products' },
   { name: 'ABOUT US', path: '/about' },
   { name: 'CAREERS', path: '/carrers' },
-  { name: 'EVENTS', path: '/events' }, // ✅ Added Events link
+  { name: 'EVENTS', path: '/events' },
   { name: 'CONTACT', path: '/contact' },
 ];
-
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -42,27 +41,27 @@ const Navbar = () => {
   // Animation sequence
   useEffect(() => {
     const sequence = async () => {
-      // Step 1: Move logo to center with slow coin rotation (Y-axis) + zoom in
+      // Step 1: Move logo to center
       await logoControls.start({
         x: window.innerWidth / 2 - 60,
         scale: 1.5,
         rotateY: 360,
-        transition: { duration: 2, ease: 'easeInOut' }, // slower
+        transition: { duration: 2, ease: 'easeInOut' },
       });
 
-      // Step 2: Move back to left with slow coin rotation + zoom out
-      await logoControls.start({
+      // Step 2: Start returning logo AND show links at the same time
+      logoControls.start({
         x: 0,
         scale: 1,
-        rotateY: 720, // continues rotation
-        transition: { duration: 2, ease: 'easeInOut' }, // slower
+        rotateY: 720,
+        transition: { duration: 2, ease: 'easeInOut' },
       });
 
-      // Step 3: Show all links together
+      // Trigger links immediately
       setShotLinks(shootingOrder);
 
-      // Step 4: Show name after delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // Step 3: Wait for logo to finish returning, then show name
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       setShowName(true);
     };
 
@@ -119,14 +118,14 @@ const Navbar = () => {
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-6">
-              {shotLinks.map((link) => {
+              {shotLinks.map((link, index) => {
                 const isActive = location.pathname === link.path;
                 return (
                   <motion.div
                     key={link.name}
                     initial={{ x: -100, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
                     className="group relative text-sm font-medium"
                   >
                     <NavLink to={link.path} end={link.path === '/'}>

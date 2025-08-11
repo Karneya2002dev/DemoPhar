@@ -29,11 +29,9 @@ const products = [
     description:
       "Treatments for asthma, COPD, and other respiratory conditions.",
     images: [
-      // "https://onemg.gumlet.io/l_watermark_346,w_480,h_480/a_ignore,w_480,h_480,c_fit,q_auto,f_auto/cropped/r2ks7zq0jls741hs3p6x.jpg?dpr=2&format=auto",
       "https://onemg.gumlet.io/l_watermark_346,w_480,h_480/a_ignore,w_480,h_480,c_fit,q_auto,f_auto/f597b8b14fe546698a759e6603a87f1b.jpg",
       "https://m.media-amazon.com/images/I/81df59+sScL._UF350,350_QL80_.jpg",
       "https://5.imimg.com/data5/SELLER/Default/2025/4/500559231/OP/IA/HL/144351487/450-mg-deriphyllin-od-etofylline-and-theophylline-prolonged-release-tablets.jpg",
-      
     ],
   },
   {
@@ -43,10 +41,9 @@ const products = [
     description:
       "Broad-spectrum and targeted antibiotics for various infections.",
     images: [
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ52_0_EgGG4brTrdMRWnXy2hAKJQvV29Kwp10Ylvi6yMgPIXGEKvVhm-eXv6xtx_Va-UQ&usqp=CAU",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ52_0_EgGG4brTrdMRWnXy2hAKJQvV29Kwp10Ylvi6yMgPIXGEKvVhm-eXv6xtx_Va-UQ&usqp=CAU",
       "https://5.imimg.com/data5/SELLER/Default/2023/8/335346102/XW/YA/YR/194714502/griseofulvin-500-mg-tablets-500x500.jpg",
       "https://5.imimg.com/data5/SELLER/Default/2024/4/406854905/DU/WP/MX/99810145/griseofulvin-500mg-tablets-500x500.jpg",
-
     ],
   },
   {
@@ -56,9 +53,8 @@ const products = [
     description:
       "Comprehensive solutions for effective blood sugar control and diabetic care.",
     images: [
-            "https://ik.imagekit.io/wlfr/wellness/images/products/220782-1.jpg",
+      "https://ik.imagekit.io/wlfr/wellness/images/products/220782-1.jpg",
       "https://5.imimg.com/data5/SELLER/Default/2024/11/468317319/WH/CF/NX/226486661/diabetrol-sr-tablet.jpg",
-
       "https://assets.truemeds.in/Images/ProductImage/TM-TASR1-000192/diabetrol-sr-tablet-10_diabetrol-sr-tablet-10--TM-TASR1-000192_2.png?width=320",
     ],
   },
@@ -86,6 +82,26 @@ const fadeInUp = {
   }),
 };
 
+const LazyImage = ({ src, alt, className }) => {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div className={`relative overflow-hidden ${className}`}>
+      {!loaded && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+        className={`w-full h-full object-cover transition-opacity duration-500 ${
+          loaded ? "opacity-100" : "opacity-0"
+        }`}
+      />
+    </div>
+  );
+};
+
 const ProductCard = ({ product, delay, onClick }) => (
   <motion.div
     initial="hidden"
@@ -98,10 +114,10 @@ const ProductCard = ({ product, delay, onClick }) => (
     className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden cursor-pointer"
     onClick={() => onClick(product)}
   >
-    <img
+    <LazyImage
       src={product.images[0]}
       alt={product.title}
-      className="w-full h-48 object-cover"
+      className="w-full h-48"
     />
     <div className="p-4 text-center">
       <h4 className="text-lg font-bold text-gray-900">{product.title}</h4>
@@ -114,6 +130,16 @@ const ProductModal = ({ product, onClose }) => {
   const [zoomImage, setZoomImage] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showDots, setShowDots] = useState(false);
+
+  // Preload all product images when modal opens
+  useEffect(() => {
+    if (product) {
+      product.images.forEach((img) => {
+        const image = new Image();
+        image.src = img;
+      });
+    }
+  }, [product]);
 
   useEffect(() => {
     let timer;
@@ -139,7 +165,6 @@ const ProductModal = ({ product, onClose }) => {
     <AnimatePresence>
       {product && (
         <>
-          {/* Modal backdrop */}
           <motion.div
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
@@ -154,7 +179,6 @@ const ProductModal = ({ product, onClose }) => {
               exit={{ scale: 0.8 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close button */}
               <button
                 onClick={onClose}
                 className="absolute top-3 right-3 text-gray-600 hover:text-red-500 transition text-3xl font-bold z-10"
@@ -162,12 +186,12 @@ const ProductModal = ({ product, onClose }) => {
                 &times;
               </button>
 
-              {/* Left - Click to Zoom/Rotate */}
               <div className="bg-gray-100 flex items-center justify-center p-4">
                 <motion.img
                   key={currentIndex}
                   src={product.images[currentIndex]}
                   alt={product.title}
+                  loading="lazy"
                   className="max-h-[400px] object-contain rounded-lg cursor-pointer"
                   initial={{ opacity: 0, rotateY: 90 }}
                   animate={{ opacity: 1, rotateY: 0 }}
@@ -177,7 +201,6 @@ const ProductModal = ({ product, onClose }) => {
                 />
               </div>
 
-              {/* Right - Details */}
               <div className="p-6 flex flex-col justify-center">
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">
                   {product.title}
@@ -188,7 +211,6 @@ const ProductModal = ({ product, onClose }) => {
             </motion.div>
           </motion.div>
 
-      
           <AnimatePresence>
             {zoomImage && (
               <motion.div
@@ -197,7 +219,6 @@ const ProductModal = ({ product, onClose }) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                {/* Floating X close button */}
                 <button
                   onClick={() => setZoomImage(false)}
                   className="absolute top-5 right-5 text-white text-4xl font-bold hover:text-red-500 transition z-50"
@@ -209,6 +230,7 @@ const ProductModal = ({ product, onClose }) => {
                   key={currentIndex}
                   src={product.images[currentIndex]}
                   alt={product.title}
+                  loading="lazy"
                   className="max-h-[80%] max-w-full rounded-lg shadow-2xl mb-6"
                   initial={{ scale: 0.8, rotateY: 90 }}
                   animate={{ scale: 1, rotateY: 0 }}
@@ -216,7 +238,6 @@ const ProductModal = ({ product, onClose }) => {
                   transition={{ duration: 0.6 }}
                 />
 
-                {/* Dots (appear after 2 images shown) */}
                 {showDots && (
                   <div className="flex gap-2 mb-4">
                     {product.images.map((_, idx) => (
@@ -252,7 +273,6 @@ const Product = () => {
 
   return (
     <section className="relative text-white py-16 px-4 sm:px-12 overflow-hidden">
-      {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center z-0 transition-all duration-700"
         style={{
@@ -262,7 +282,6 @@ const Product = () => {
         <div className="absolute inset-0 bg-black opacity-60"></div>
       </div>
 
-      {/* Content */}
       <div className="relative z-10">
         <motion.h2
           initial="hidden"
@@ -275,7 +294,6 @@ const Product = () => {
           Our Products
         </motion.h2>
 
-        {/* Category Buttons */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
           {categories.map((category, index) => (
             <motion.button
@@ -296,7 +314,6 @@ const Product = () => {
           ))}
         </div>
 
-        {/* Product Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
           {filteredProducts.map((product, index) => (
             <ProductCard
@@ -309,7 +326,6 @@ const Product = () => {
         </div>
       </div>
 
-      {/* Modal */}
       <ProductModal
         product={modalProduct}
         onClose={() => setModalProduct(null)}
