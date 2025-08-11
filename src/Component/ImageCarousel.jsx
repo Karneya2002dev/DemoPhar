@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import banner1 from '../assets/text1.png';
 import banner2 from '../assets/text2.png';
 import banner3 from '../assets/text3.png';
@@ -11,6 +11,14 @@ import banner8 from '../assets/text8.png';
 const images = [banner1, banner2, banner3, banner4, banner5, banner6, banner7, banner8];
 
 const ImageCarousel = () => {
+  // ✅ Preload images in background
+  useEffect(() => {
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
   return (
     <div className="relative overflow-hidden w-full py-6 bg-gray-100">
       {/* Gradient Masks */}
@@ -24,11 +32,18 @@ const ImageCarousel = () => {
             key={index}
             className="mx-3 p-2 sm:p-3 transition-transform duration-500 ease-in-out hover:scale-105"
           >
-            <img
-              src={img}
-              alt={`carousel-img-${index}`}
-              className="w-48 sm:w-64 h-28 sm:h-40 object-contain rounded-xl"
-            />
+            {/* Skeleton shimmer until image loads */}
+            <div className="relative w-48 sm:w-64 h-28 sm:h-40 bg-gray-200 animate-pulse rounded-xl overflow-hidden">
+              <img
+                src={img}
+                alt={`carousel-img-${index}`}
+                loading="lazy"
+                className="w-48 sm:w-64 h-28 sm:h-40 object-contain absolute inset-0"
+                onLoad={(e) =>
+                  e.target.parentElement.classList.remove('animate-pulse', 'bg-gray-200')
+                }
+              />
+            </div>
           </div>
         ))}
       </div>
