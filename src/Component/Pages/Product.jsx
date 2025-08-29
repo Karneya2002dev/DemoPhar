@@ -150,7 +150,7 @@ const products = [
     title: "Spaz Tap",
     description:
       "Thiocolchicoside, Aceclofenac, Paracetamol – relieves pain, inflammation, and spasms.",
-    images: ["/https://i.postimg.cc/J0dB9VXM/Spaz-Tap.jpg"],
+    images: ["https://i.postimg.cc/J0dB9VXM/Spaz-Tap.jpg"],
   },
   {
     id: 17,
