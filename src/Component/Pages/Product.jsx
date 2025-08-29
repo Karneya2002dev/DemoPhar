@@ -5,72 +5,209 @@ const categories = [
   "All Products",
   "Cardiovascular",
   "Respiratory",
+  "Pain / Musculoskeletal",
+  "Orthopedic / Bone Health",
+  "Orthopedic / Joint Health",
+  "Hematology / Anemia",
+  "Gynecology / Fertility",
+  "Gastrointestinal",
   "Infectious Disease",
-  "Diabetics",
 ];
+
 
 const products = [
   {
     id: 1,
     category: "Cardiovascular",
-    title: "Cardiovascular Care",
+    title: "Argiflux",
     description:
-      "Advanced medications for heart health and blood pressure management.",
-    images: [
-      "https://media.istockphoto.com/id/458563393/photo/aspirin-bottle-with-tablets-spilling-out.jpg?s=612x612&w=0&k=20&c=MuRtWxOfp_rA2hWvVxAoJEeOcaWFIQ1xqtieh-W5iG8=",
-      "https://dailymed.nlm.nih.gov/dailymed/image.cfm?name=Aspirin-81mg-Kroger-300s+-+Label.jpg&id=569529",
-      "https://s7d5.scene7.com/is/image/CentralMarket/000671394-1",
-    ],
+      "L-Arginine, Glutathione, Proanthocyanidin Granules – supports blood flow, endothelial function, and antioxidant health.",
+    images: ["https://i.postimg.cc/V6WqZV4k/Argiflux.png"],
   },
   {
     id: 2,
-    category: "Respiratory",
-    title: "Respiratory Solutions",
+    category: "Pain / Musculoskeletal",
+    title: "Acpon",
     description:
-      "Treatments for asthma, COPD, and other respiratory conditions.",
-    images: [
-      "https://onemg.gumlet.io/l_watermark_346,w_480,h_480/a_ignore,w_480,h_480,c_fit,q_auto,f_auto/f597b8b14fe546698a759e6603a87f1b.jpg",
-      "https://m.media-amazon.com/images/I/81df59+sScL._UF350,350_QL80_.jpg",
-      "https://5.imimg.com/data5/SELLER/Default/2025/4/500559231/OP/IA/HL/144351487/450-mg-deriphyllin-od-etofylline-and-theophylline-prolonged-release-tablets.jpg",
-    ],
+      "Aceclofenac + Paracetamol – relieves pain and inflammation in musculoskeletal disorders.",
+    images: ["https://i.postimg.cc/SK87CsM8/Acpon.jpg"],
   },
   {
     id: 3,
-    category: "Infectious Disease",
-    title: "Antibiotics",
+    category: "Orthopedic / Bone Health",
+    title: "Cisqtrix",
     description:
-      "Broad-spectrum and targeted antibiotics for various infections.",
-    images: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ52_0_EgGG4brTrdMRWnXy2hAKJQvV29Kwp10Ylvi6yMgPIXGEKvVhm-eXv6xtx_Va-UQ&usqp=CAU",
-      "https://5.imimg.com/data5/SELLER/Default/2023/8/335346102/XW/YA/YR/194714502/griseofulvin-500-mg-tablets-500x500.jpg",
-      "https://5.imimg.com/data5/SELLER/Default/2024/4/406854905/DU/WP/MX/99810145/griseofulvin-500mg-tablets-500x500.jpg",
-    ],
+      "Cissus quadrangularis, Calcium, Calcitriol, Vitamin K2-7 – promotes bone strengthening and repair.",
+    images: ["https://i.postimg.cc/NGb81Z5N/Cisqtrix.jpg"],
   },
   {
     id: 4,
-    category: "Diabetics",
-    title: "Diabetes Management",
+    category: "Pain / Musculoskeletal",
+    title: "EC Tap MR",
     description:
-      "Comprehensive solutions for effective blood sugar control and diabetic care.",
+      "Etoricoxib + Thiocolchicoside – arthritis and muscle relaxant therapy.",
+    images: ["https://i.postimg.cc/90XG6YNt/EC-Tap-MR.jpg"],
+  },
+  {
+    id: 5,
+    category: "Hematology / Anemia",
+    title: "Ferzi Plus",
+    description:
+      "Ferrous Bisglycinate, Zinc, Methylcobalamin, L-Methylfolate – advanced formula for anemia and neuropathy support.",
+    images: ["https://i.postimg.cc/90xGCw63/Ferzi-Plus.jpg"],
+  },
+  {
+    id: 6,
+    category: "Orthopedic / Joint Health",
+    title: "FlexmaXX UC",
+    description:
+      "Collagen peptide, Glucosamine, Chondroitin, Boswellia, Vit D3 – joint repair and mobility enhancer.",
+    images: ["https://i.postimg.cc/3JRX99G3/Flexma-XX-UC.jpg"],
+  },
+  {
+    id: 7,
+    category: "Orthopedic / Bone Health",
+    title: "Magnes D3",
+    description:
+      "Magnesium Glycine Complex + Vitamin D3 – supports bone strength and muscle function.",
+    images: ["https://i.postimg.cc/L8gzFXv7/Magnes-D3.jpg"],
+  },
+  {
+    id: 8,
+    category: "Respiratory",
+    title: "MontiQik-L",
+    description:
+      "Montelukast + Levocetirizine – effective in asthma, allergic rhinitis, and respiratory allergies.",
+    images: ["https://i.postimg.cc/q7f2JT57/Montiqik-L.jpg"],
+  },
+  {
+    id: 9,
+    category: "Gynecology / Fertility",
+    title: "OvaFol",
+    description:
+      "Myo-Inositol, D-Chiro Inositol, Folate, Vit D3, Chromium, Zinc – PCOS, insulin resistance, and fertility support.",
+    images: ["https://i.postimg.cc/gJmRhKdF/OvaFol.jpg"],
+  },
+
+  // ------------------ NEW UPLOADED PRODUCTS ------------------ //
+  {
+    id: 10,
+    category: "Hematology / Anemia",
+    title: "Tri B Max Total",
+    description:
+      "Advanced B-complex with Iron & Zinc – supports anemia, energy, and neurological function.",
     images: [
-      "https://ik.imagekit.io/wlfr/wellness/images/products/220782-1.jpg",
-      "https://5.imimg.com/data5/SELLER/Default/2024/11/468317319/WH/CF/NX/226486661/diabetrol-sr-tablet.jpg",
-      "https://assets.truemeds.in/Images/ProductImage/TM-TASR1-000192/diabetrol-sr-tablet-10_diabetrol-sr-tablet-10--TM-TASR1-000192_2.png?width=320",
+      "https://i.postimg.cc/7ZzTQRZr/Tri-B-Max-Total.jpg"
     ],
   },
+  {
+    id: 11,
+    category: "Gynecology / Fertility",
+    title: "Tribmax DHA",
+    description:
+      "Folic Acid, DHA, Vitamins & Minerals – essential formula for pregnancy and fetal development.",
+    images: [
+      "https://i.postimg.cc/3wHDMZk4/Tribmax-DHA.jpg"
+    ],
+  },
+  {
+    id: 12,
+    category: "Cardiovascular",
+    title: "VFite 5G",
+    description:
+      "Multivitamin & Antioxidant formula with advanced phytonutrients – supports heart health, immunity, and energy.",
+    images: [
+      "https://i.postimg.cc/CKHnwf8v/VFite-5G.jpg"
+    ],
+  },
+  {
+    id: 13,
+    category: "Respiratory",
+    title: "Pulmoact",
+    description:
+      "Acebrophylline & N-Acetylcysteine – mucolytic and bronchodilator for respiratory care.",
+    images: ["https://i.postimg.cc/LszLhbc3/Pulmoact.jpg"],
+  },
+  {
+    id: 14,
+    category: "Infectious Disease",
+    title: "Qikzyme",
+    description:
+      "Trypsin, Bromelain & Rutoside – anti-inflammatory and wound healing support.",
+    images: ["https://i.postimg.cc/9Mb9YqF4/Qikzyme.jpg"],
+  },
+  {
+    id: 15,
+    category: "Gastrointestinal",
+    title: "Rde DSR",
+    description:
+      "Rabeprazole Sodium (EC) & Domperidone (SR) – GERD and acid reflux management.",
+    images: ["https://i.postimg.cc/D0zXjy8x/Rde-DSR.jpg"],
+  },
+  {
+    id: 16,
+    category: "Pain / Musculoskeletal",
+    title: "Spaz Tap",
+    description:
+      "Thiocolchicoside, Aceclofenac, Paracetamol – relieves pain, inflammation, and spasms.",
+    images: ["/https://i.postimg.cc/J0dB9VXM/Spaz-Tap.jpg"],
+  },
+  {
+    id: 17,
+    category: "Orthopedic / Joint Health",
+    title: "Tendo Qik 4D",
+    description:
+      "Collagen Peptide, Rosehip Extract, Sodium Hyaluronate, L-Carnitine, Chondroitin, Vitamin C & D3 – advanced joint care.",
+    images: ["https://i.postimg.cc/28VWnyp6/Tendo-Qik.jpg"],
+  },
+  {
+    id: 18,
+    category: "Orthopedic / Joint Health",
+    title: "Tendo Qik",
+    description:
+      "Collagen Peptides, Chondroitin, Sodium Hyaluronate, Vitamin C – joint health supplement.",
+    images: ["https://i.postimg.cc/L6w1DSRV/Tendo-Qik-4-D.jpg"],
+  },
+ 
+  
 ];
+
+
+
 
 const categoryBackgrounds = {
   "All Products":
     "https://img.pikbest.com/wp/202347/capsule-pill-pharmacy-and-healthcare-concept-blue-background-with-pills-in-panoramic-layout-3d-render_9763081.jpg!sw800",
+
   Cardiovascular:
     "https://media.istockphoto.com/id/454238423/photo/stethoscope-heart-shape.jpg?s=612x612&w=0&k=20&c=1jtvb5aCwdR7nY1prW11mNwW0Wla3bUSkc17_C6YfK8=",
+
   Respiratory:
     "https://media.istockphoto.com/id/816819352/photo/the-inhaler-and-mask-pairs-antiallergic-drugs-isolated-on-black-background.jpg?s=612x612&w=0&k=20&c=fbu9ol4ibS_0sV5S83WL4DsI2FYVdzwdse_hz2H8yJ4=",
+
   "Infectious Disease":
     "https://png.pngtree.com/background/20250212/original/pngtree-texture-of-geometry-and-microbiology-in-medical-particle-elements-picture-image_13456132.jpg",
+
   Diabetics:
     "https://www.slideegg.com/image/multi-slide/47857/82163-diabetes-powerpoint-background-01.png",
+
+  "Pain / Musculoskeletal":
+    "https://shahalam.avisena.com.my/wp-content/uploads/2023/09/article-Joint-Health-intro.jpg",
+
+  "Orthopedic / Bone Health":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZSTsaAN2ka7gXp7nqjpT7-bBRQciz81uxiW-nwVruaBm6eoRFqSJYOjG2diV0Pknw7RM&usqp=CAU",
+
+  "Orthopedic / Joint Health":
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZpdr8A4EQfZQ77fQLIlSD-HBzr7aXqtHbcA&s",
+
+  "Hematology / Anemia":
+    "https://www.sysmex.com/-/media/project/sysmex/sysmex/images/2-column_content_component-image_and_text/knowledge-card-hematology-image.jpg?iar=0&sc_lang=es-cl&hash=C88576D54F61DBE513C85DA7D2918E96",
+
+  "Gynecology / Fertility":
+    "https://www.newhopefertility.com/wp-content/uploads/2023/07/When-to-See-a-Fertility-Specialist.webp",
+
+  Gastrointestinal:
+    "https://gemhospitals.com/frontend/assets/images/team/grid/UPPER_GI.jpg",
 };
 
 const fadeInUp = {
